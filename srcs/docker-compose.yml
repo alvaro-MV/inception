@@ -43,6 +43,22 @@ services:
       - mariadb
     expose:
       - "9000"
+  
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    image: nginx-inception
+    restart: unless-stopped
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress_data:/var/www/html:ro
+    networks:
+      - inception_net
+    depends_on:
+      - wordpress
 
 volumes:
   mariadb_data:
