@@ -227,3 +227,28 @@ This is acceptable during setup in Inception.
 ## 🏁 Final Notes
 
 This project is fully compliant with the **42 Inception subject** and demonstrates a clean, production-style Docker architecture.
+
+
+Cosas a hacer:
+
+- [1]  cambiar de logic.fr a alvmoral.fr
+
+- [2]  poner el arbol de directorios como dice el subject 
+
+- [3]  Hacer los 3 READMES que dice el subject
+
+- [4]  EL Makefle
+
+- [5]  wait en entrypoint.sh: esta bien?
+
+- [6]  Los secretos de Docker: de que va la vaina.
+
+- [7]  Que relacion existe entre el contenedor de nginx y el volume de wordpress? (Figura del subject)
+
+- [8]  Ver si la version de debian es la correcta
+
+- [9]  Explicar docker-network
+
+- [10] docker volume inspect 
+
+- [11] Crear dos usuarios en wordpress.
