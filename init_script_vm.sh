@@ -4,7 +4,7 @@ set -euo pipefail
 # =========================
 # CONFIGURA ESTO
 # =========================
-OLD_USER="usuario_antiguo"
+OLD_USER="dlesieur"
 NEW_USER="alvaro"
 NEW_HOME="/home/alvaro"
 
@@ -16,7 +16,7 @@ DELETE_OLD_USER=false
 NOPASSWD_SUDO=false
 
 # Grupos típicos útiles en Ubuntu/Debian + VirtualBox
-EXTRA_GROUPS="sudo,adm,cdrom,dip,plugdev,lpadmin,vboxsf"
+EXTRA_GROUPS="sudo,cdrom"
 
 # =========================
 # COMPROBACIONES
@@ -72,6 +72,18 @@ chmod 440 "/etc/sudoers.d/90-$NEW_USER"
 visudo -cf "/etc/sudoers.d/90-$NEW_USER"
 
 echo "[6/7] Pidiendo contraseña para $NEW_USER"
+
+echo "[PRE] Reparando diccionario cracklib si hace falta..."
+
+if command -v update-cracklib >/dev/null 2>&1; then
+    update-cracklib || true
+elif command -v create-cracklib-dict >/dev/null 2>&1; then
+    create-cracklib-dict /usr/share/dict/* || true
+else
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y cracklib-runtime wamerican
+    update-cracklib || true
+fi
 
 passwd "$NEW_USER"
 
