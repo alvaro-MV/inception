@@ -1,7 +1,13 @@
 COMPOSE_CONFIG_PATH = ./srcs/docker-compose.yml
 
 up:
-	docker compose --file $(COMPOSE_CONFIG_PATH) up
+	docker compose --file $(COMPOSE_CONFIG_PATH) up -d
+
+down:
+	docker compose --file $(COMPOSE_CONFIG_PATH) down
+
+build:
+	docker compose --file $(COMPOSE_CONFIG_PATH) build
 
 clean:
 	docker compose --file $(COMPOSE_CONFIG_PATH) clean

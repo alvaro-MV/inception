@@ -9,12 +9,11 @@ RUN apt-get update && apt-get install -y \
 
 RUN rm -f /etc/nginx/sites-enabled/default
 
-RUN mkdir -p /etc/nginx/certs
-
 COPY conf/nginx.conf /etc/nginx/nginx.conf
-COPY certs/fullchain.pem /etc/nginx/certs/
-COPY certs/privkey.pem /etc/nginx/certs/
+
+COPY docker-entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 443
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

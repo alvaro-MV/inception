@@ -1,56 +1,69 @@
-# version: "3.9"
-
 services:
   mariadb:
     container_name: mariadb
+    image: mariadb-inception
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
-    image: mariadb-inception
-    restart: unless-stopped
     env_file:
       - .env
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_root_password
+      - db_password
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
       - inception_net
     expose:
       - "3306"
-  
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root --password=$$(cat /run/secrets/db_root_password) || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   wordpress:
     container_name: wordpress
+    image: wordpress-inception
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
-    image: wordpress-inception
-    restart: unless-stopped
     env_file:
       - .env
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_HOST: mariadb
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      WP_ADMIN_PASSWORD_FILE: /run/secrets/wp_admin_password
+      WP_USER_PASSWORD_FILE: /run/secrets/wp_user_password
+    secrets:
+      - db_password
+      - wp_admin_password
+      - wp_user_password
     volumes:
       - wordpress_data:/var/www/html
     networks:
       - inception_net
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     expose:
       - "9000"
-  
+    restart: unless-stopped
+
   nginx:
     container_name: nginx
+    image: nginx-inception
     build:
       context: ./requirements/nginx
       dockerfile: Dockerfile
-    image: nginx-inception
-    restart: unless-stopped
     ports:
       - "443:443"
     volumes:
@@ -59,16 +72,24 @@ services:
       - inception_net
     depends_on:
       - wordpress
+    restart: unless-stopped
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_password
+  db_password:
+    file: ../secrets/db_password
+  wp_admin_password:
+    file: ../secrets/wp_admin_password
+  wp_user_password:
+    file: ../secrets/wp_user_password
 
 volumes:
   mariadb_data:
-    driver: local
+    name: mariadb_data
+
   wordpress_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${WORDPRESS_VOLUME_PATH}
+    name: wordpress_data
 
 networks:
   inception_net:
