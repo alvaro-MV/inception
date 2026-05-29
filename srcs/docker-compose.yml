@@ -74,6 +74,30 @@ services:
       - wordpress
     restart: unless-stopped
 
+  redis:
+    container_name: redis
+    image: redis-inception
+    build:
+      context: ./requirements/bonus/adminer
+      dockerfile: Dockerfile
+    networks:
+      - inception_net
+    restart: always
+
+  adminer:
+    container_name: adminer
+    image: adminer-inception
+    build:
+      context: ./requirements/bonus/adminer
+      dockerfile: Dockerfile
+    networks:
+      - inception_net
+    ports:
+      - "8081:8080"
+    restart: always
+    depends_on:
+      - mariadb
+
 secrets:
   db_root_password:
     file: ../secrets/db_root_password

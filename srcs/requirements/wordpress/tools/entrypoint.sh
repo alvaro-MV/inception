@@ -43,6 +43,18 @@ else
   echo "==> WordPress already installed."
 fi
 
+REDIS_MARKER="/var/www/html/.redis_configured"
+
+if [ ! -f "$REDIS_MARKER" ]; then
+  echo "[WP] Setting up Redis cache..."
+  wp plugin install redis-cache --activate --path=/var/www/html --allow-root || true
+  wp config set WP_REDIS_HOST redis --type=constant --path=/var/www/html --allow-root
+  wp config set WP_REDIS_PORT 6379 --raw --type=constant --path=/var/www/html --allow-root
+  wp redis enable --path=/var/www/html --allow-root || true
+  touch "$REDIS_MARKER"
+  chown www-data:www-data "$REDIS_MARKER"
+fi
+
 chown -R www-data:www-data /var/www/html
 
 exec php-fpm8.2 -F

@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     php-xml \
     php-xmlrpc \
     php-zip \
+    php-redis \
     wget \
     curl \
     unzip \
