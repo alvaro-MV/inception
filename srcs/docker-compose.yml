@@ -97,6 +97,30 @@ services:
     restart: always
     depends_on:
       - mariadb
+    
+    ftp:
+      container_name: ftp
+      image: ftp-inception
+      build:
+        context: ./requirementes/bonus/ftp
+        dockerfile: Dockerfile
+      env_file:
+      - .env
+      environment:
+        FTP_USER: ${FTP_USER}
+        FTP_PASSWORD_FILE: /run/secrets/ftp_password
+      secrets:
+        - ftp_password
+      volumes:
+        - wordpress_data:/srv/vsftpd
+      networks:
+        - inception_net
+      ports:
+        - "21:21"
+        - "64000-64321"
+      restart: always
+
+
 
 secrets:
   db_root_password:
@@ -107,6 +131,8 @@ secrets:
     file: ../secrets/wp_admin_password
   wp_user_password:
     file: ../secrets/wp_user_password
+  ftp_password:
+    file: ../secrets/ftp_password
 
 volumes:
   mariadb_data:
