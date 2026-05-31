@@ -18,9 +18,13 @@ define('WP_DEBUG_LOG', false);
 define('WP_DEBUG_DISPLAY', false);
 
 define('FS_METHOD', 'direct');
+define('WP_REDIS_HOST', 'redis');
+define('WP_REDIS_PORT', 6379);
 
 if (!defined('ABSPATH')) {
     define('ABSPATH', __DIR__ . '/');
 }
+
+/* That's all, stop editing! Happy publishing. */
 
 require_once ABSPATH . 'wp-settings.php';

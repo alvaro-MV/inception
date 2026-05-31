@@ -16,7 +16,7 @@ if [ ! -f "$KEY" ] || [ ! -f "$CRT" ]; then
     -key "$KEY" \
     -out "$CRT" \
     -days 365 \
-    -subj "/CN=localhost"
+    -subj "/CN=alvmoral.42.fr"
 
   chmod 600 "$KEY" "$CRT"
 fi
