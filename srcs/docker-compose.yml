@@ -102,7 +102,7 @@ services:
     container_name: ftp
     image: ftp-inception
     build:
-      context: ./requirementes/bonus/ftp
+      context: ./requirements/bonus/ftp
       dockerfile: Dockerfile
     env_file:
     - .env
@@ -116,7 +116,7 @@ services:
     networks:
       - inception_net
     ports:
-      - "21:21"
+      - "8888:21"
       - "64000-64321:64000-64321"
     restart: always
 

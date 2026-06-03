@@ -10,6 +10,9 @@ echo "FTP USER: $USER"
 mkdir -p /etc/vsftpd
 mkdir -p /srv/vsftpd
 
+mkdir -p /var/run/vsftpd/empty
+chmod 555 /var/run/vsftpd/empty
+
 echo "Generating PAM configuration..."
 
 cat > /etc/pam.d/vsftpd_inception << EOF
