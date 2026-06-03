@@ -13,6 +13,9 @@ mkdir -p /srv/vsftpd
 mkdir -p /var/run/vsftpd/empty
 chmod 555 /var/run/vsftpd/empty
 
+mkdir -p /var/www
+chown www-data:www-data /var/www
+
 echo "Generating PAM configuration..."
 
 cat > /etc/pam.d/vsftpd_inception << EOF
