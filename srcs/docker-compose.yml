@@ -72,6 +72,7 @@ services:
       - inception_net
     depends_on:
       - wordpress
+      - adminer
     restart: unless-stopped
 
   redis:
@@ -92,8 +93,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - inception_net
-    ports:
-      - "8081:8080"
+    expose:
+      - "8080"
     restart: always
     depends_on:
       - mariadb
