@@ -106,7 +106,7 @@ services:
       context: ./requirements/bonus/ftp
       dockerfile: Dockerfile
     env_file:
-    - .env
+      - .env
     environment:
       FTP_USER: ${FTP_USER}
       FTP_PASSWORD_FILE: /run/secrets/ftp_password
@@ -120,7 +120,29 @@ services:
       - "8888:21"
       - "64000-64321:64000-64321"
     restart: always
-
+  
+  portainer:
+    container_name: portainer
+    image: portainer-inception
+    build:
+      context: ./requirements/bonus/portainer
+      dockerfile: Dockerfile
+    env_file:
+     - .env
+    environment:
+      PORTAINER_PASSWORD: /run/secrets/portainer_password
+    secrets:
+      - portainer_password
+    volumes:
+      - portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - inception_net
+    ports:
+      - 127.0.0.1:9443:9443
+      - 127.0.0.1:9000:9000
+      - 127.0.0.1:8000:8000
+    restart: always
 
 
 secrets:
@@ -134,6 +156,9 @@ secrets:
     file: ../secrets/wp_user_password
   ftp_password:
     file: ../secrets/ftp_password
+  portainer_password:
+    file: ../secrets/portainer_password
+
 
 volumes:
   mariadb_data:
@@ -141,6 +166,9 @@ volumes:
 
   wordpress_data:
     name: wordpress_data
+  
+  portainer_data:
+    name: portainer_data
 
 networks:
   inception_net:
