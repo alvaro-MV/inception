@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ch
+chown -R root:root /data
 
 exec /portainer \
-    --admin-password-file "$(cat "$PORTAINER_PASSWORD")"
+    --admin-password-file /run/secrets/portainer_password
