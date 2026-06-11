@@ -80,8 +80,10 @@ services:
     container_name: redis
     image: redis-inception
     build:
-      context: ./requirements/bonus/adminer
+      context: ./requirements/bonus/redis
       dockerfile: Dockerfile
+    expose:
+      - "6379"
     networks:
       - inception_net
     restart: always
